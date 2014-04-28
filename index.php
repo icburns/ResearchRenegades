@@ -11,6 +11,7 @@
 	<head>
 		<title>Backchannel</title>
 		<meta charset="UTF-8">
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 		<link href="backchannel.css" type="text/css" rel="stylesheet">
 	</head>
 
@@ -33,12 +34,12 @@
 				<div class='post'>check this out http://doge2048.com/</div>
 			</div>
 			<div id='newPost'>
-				<form>
+				<form name='makeNewPost'>
 					<div id='tags'>
 						<button id='questionTag' name='question'>Question</button>
 						<button id='resourceTag' name='Resource'>Resource</button>
 					</div>
-					<input class='postArea' type='textfield' name='newPost'>
+					<input class='postArea' type='text' name='newPost'>
 					<input class='submitPost' type='submit'>
 				</form>
 			</div>

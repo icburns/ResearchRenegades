@@ -12,14 +12,11 @@ html, body{
 	font-family:"Gill Sans MT","Helvetica",sans-serif;	
 }
 
+/*
+** Columns
+*/
 section{
 	height:100%;
-	width:25%;
-	float:left;
-
-}
-
-#filters{
 	width:25%;
 	float:left;
 }
@@ -28,19 +25,31 @@ section{
 	width:50%;	
 }
 
-#usersChat{
+
+/*
+** Left Column
+*/
+#filters{
+	border:solid 1px rgba(25,25,25,1);	
 }
 
+/*
+** Center Column
+*/
 #backchannel{
 	height:75%;
+	border:solid 1px rgba(25,25,25,1);
+	padding:5%;
 }
 
 #backchannel>div{
 	border:solid 1px rgba(25,25,25,1);
+
 }
 
 #newPost{
 	height:25%;
+	border:solid 1px rgba(25,25,25,1);
 }
 
 
@@ -75,3 +84,40 @@ section{
 	height:50%
 }
 
+/*
+** Right Column
+*/
+#usersChat{
+	border:solid 1px rgba(25,25,25,1);
+}
+
+#chat{
+	border:solid 1px rgba(25,25,25,1);
+}
+
+#users{
+	border:solid 1px rgba(25,25,25,1);
+}
+
+#users>ul{
+	list-style-type: none;
+	padding:0px;
+	
+}
+
+#users li{
+	padding-left:10%;
+}
+
+li:hover{
+	background-color:rgba(255,255,255,.5);
+	cursor:pointer;
+}
+
+#onlineTA{
+	font-weight: bold;
+}
+
+#onlineTA>li:hover{
+	background-color:rgba(0,0,255,.5);
+}
