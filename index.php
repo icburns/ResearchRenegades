@@ -46,7 +46,7 @@
 		</section>
 
 		<section id='usersChat'>
-			<div id='users'>
+			<div id='users' style="overflow:scroll;overflow-y:scroll;overflow-x:hidden;height:30%;">
 				<ul id='onlineTA'>
 					<li>Paul</li>
 					<li>Tania</li>
@@ -58,6 +58,19 @@
 					<li>Leighton</li>
 					<li>Leon</li>
 					<li>Romelu</li>
+					<li>Harry</li>
+					<li>Doug</li>
+					<li>Christian</li>
+					<li>Michael</li>
+					<li>Devin</li>
+					<li>Ben</li>
+					<li>Dinesvara</li>
+					<li>Juan Martin</li>
+					<li>Christina</li>
+					<li>Brittney</li>
+					<li>Sean</li>
+					<li>Angela</li>
+					<li>Linda</li>
 				</ul>
 			</div>						
 			<div id='chat'>
