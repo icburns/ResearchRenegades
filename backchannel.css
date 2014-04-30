@@ -97,6 +97,10 @@ section{
 
 #users{
 	border:solid 1px rgba(25,25,25,1);
+	overflow: scroll;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	height: 30%;
 }
 
 #users>ul{

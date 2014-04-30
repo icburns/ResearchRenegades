@@ -17,19 +17,27 @@
 
 	<body>
 		<header>
-			
+			Topic 1.3 Information Systems
 		</header>
 
 		<section id='filters'>
 			<div>Topics</div>
 			<div>Answered Q's</div>
 			<div>Unanswered Q's</div>
+			<div>Resources</div>
 			<div>My Questions</div>
 		</section>
 
 		<section id='posts'>
 			<div id='backchannel'>
-				<div class='question'>What is the E in TEDS?</div>
+				<form id="filter">
+					<fieldset>
+						<input type="checkbox" name="Questions" value="Questions">Questions
+						<input type="checkbox" name="Resources" value="Resources">Resources
+						<input type="checkbox" name="General" value="General">General
+					</fieldset>
+				</form>
+				<div class='question'>What is the E in TEDS?<button type="button" class="reply">Reply</button></div>
 				<div class='resource'>To anyone who wants to learn more about jquery: http://www.w3schools.com/Jquery/default.asp</div>
 				<div class='post'>check this out http://doge2048.com/</div>
 			</div>
@@ -46,7 +54,7 @@
 		</section>
 
 		<section id='usersChat'>
-			<div id='users' style="overflow:scroll;overflow-y:scroll;overflow-x:hidden;height:30%;">
+			<div id='users'>
 				<ul id='onlineTA'>
 					<li>Paul</li>
 					<li>Tania</li>
