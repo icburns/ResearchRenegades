@@ -21,7 +21,7 @@
 			$('#postTag').val(tagValue);
 		}
 	
-		var socket = io.connect('http://localhost:8000');
+		var socket = io.connect('http://backchannel.azurewebsites.net:8000');
 		var postForm = $('form[name=makeNewPost]');
 		var backchannel = $('#backchannel');
 		var postArea = $('#postArea');

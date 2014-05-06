@@ -7,9 +7,7 @@ var express = require('express'),
 	
 server.listen(port);
 
-app.get('/', function(req,res){
-	res.sendfile(__dirname + 'index.html');
-});
+app.use(express.static(__dirname));
 
 io.sockets.on('connection', function(socket){
     socket.on("join", function(name){
