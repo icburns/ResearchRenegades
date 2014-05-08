@@ -1,82 +1,74 @@
-<!DOCTYPE html>  
+<!DOCTYPE html>
 <html lang="en">
-	<head>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-		<script src="http://backchannel.azurewebsites.net:8000/socket.io/socket.io.js"></script>
-		<title>Backchannel</title>
-		<meta charset="UTF-8">
-		<link href="backchannel.css" type="text/css" rel="stylesheet">
-
-	</head>
-
-	<body>
-		<header>
-			Informatics 200 A
-		</header>
-		
-		<section id='login'>
-			<input id='username' type='text'>
-		</section>
-
-		<section id="filters">
-			<div>Topics</div>
-			<div>Answered Q's</div>
-			<div>Unanswered Q's</div>
-			<div>Resources</div>
-			<div>My Questions</div>
-		</section>
-		
-		<section id='posts'>
-			<div id='backchannel'>
-				
-			</div>
-			<div id='newPost'>
-				<form name='makeNewPost'>
-					<div id='tags'>
-						<div id='questionTag'>Question</div>
-						<div id='resourceTag'>Resource</div>
-					</div>
-					<textarea class='postArea' id='postArea' type='text'></textarea>
-					<input type='hidden' id='postTag' value=''>
-					<input class='submitPost' type='submit'>
-				</form>
-			</div>
-		</section>
-		
-				<section id="usersChat">
-			<div id="users">
-				<ul id="onlineTA">
-					<li>Paul</li>
-					<li>Tania</li>
-				</ul>
-				<ul id="onlineUsers">
-					<li>Graham</li>
-					<li>Ian</li>
-					<li>Vivek</li>
-					<li>Leighton</li>
-					<li>Leon</li>
-					<li>Romelu</li>
-					<li>Harry</li>
-					<li>Doug</li>
-					<li>Christian</li>
-					<li>Michael</li>
-					<li>Devin</li>
-					<li>Ben</li>
-					<li>Dinesvara</li>
-					<li>Juan Martin</li>
-					<li>Christina</li>
-					<li>Brittney</li>
-					<li>Sean</li>
-					<li>Angela</li>
-					<li>Linda</li>
-				</ul>
-			</div>						
-			<div id="chat">
-				<div class="activeChat"></div>
-			</div>			
-		</section>
-		
-		
-	<script type='text/javascript' src='backchannel.js'></script>
-	</body>
+    <head>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/$
+        <script src="/socket.io/socket.io.js"></script>
+        <title>Backchannel</title>
+        <meta charset="UTF-8">
+        <link href="backchannel.css" type="text/css" rel="stylesheet">
+    </head>
+    <body>
+        <header>
+            Informatics 200 A
+        </header>
+        <section id='login'>
+            <input id='username' type='text'>
+        </section>
+        <section id="filters">
+            <div>Topics</div>
+            <div>Answered Q's</div>
+            <div>Unanswered Q's</div>
+            <div>Resources</div>
+            <div>My Questions</div>
+        </section>
+        <section id='posts'>
+            <div id='backchannel'>
+            </div>
+            <div id='newPost'>
+            <form name='makeNewPost'>
+                <div id='tags'>
+                <div id='questionTag'>
+                    Question</$
+                    <div id='resourceTag'>Resource</$
+                    </div>
+                    <textarea class='postArea' id='postArea'$
+                    <input type='hidden' id='postTag' value=$
+                    <input class='submitPost' type='submit'>
+            </form>
+            </div>
+        </section>
+        <section id="usersChat">
+            <div id="users">
+                <ul id="onlineTA">
+                    <li>Paul</li>
+                    <li>Tania</li>
+                </ul>
+                <ul id="onlineUsers">
+                    <li>Graham</li>
+                    <li>Ian</li>
+                    <li>Vivek</li>
+                    <li>Leighton</li>
+                    <li>Leon</li>
+                    <li>Romelu</li>
+                    <li>Tim</li>
+                    <li>Seamus</li>
+                    <li>Sylvan</li>
+                    <li>Phil</li>
+                    <li>Ross</li>
+                    <li>Kevin</li>
+                    <li>Darren</li>
+                    <li>Steven</li>
+                    <li>John</li>
+                    <li>Tony</li>
+                    <li>Bryan</li>
+                    <li>Gareth</li>
+                    <li>James</li>
+                </ul>
+            </div>
+            <div id="chat">
+                <div class="activeChat"></div>
+            </div>
+        </section>
+        <script type='text/javascript' src='backchannel.js'></script>
+    </body>
 </html>

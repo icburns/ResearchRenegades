@@ -1,13 +1,13 @@
 var express = require('express'),
 	app = express(),
 	server = require('http').createServer(app),
-	port = process.env.port || 8000;
+	port = process.env.port || 8080;
 	io = require('socket.io').listen(server);
 	users = {};
-	
+
 server.listen(port);
 
-app.use(express.static(__dirname));
+app.use(express.static(__dirname + ''));
 
 io.sockets.on('connection', function(socket){
     socket.on("join", function(name){
