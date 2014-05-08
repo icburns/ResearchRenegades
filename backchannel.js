@@ -35,13 +35,16 @@
 
 		postForm.submit(function(e){
 			e.preventDefault();
-			socket.emit('send', {"post":postArea.val(), 	"name":socket.socket.sessionid, "tag":$('#postTag').val()});
-				postArea.val('');
+			socket.emit('send', {"post":postArea.val(), "name":socket.socket.sessionid, "tag":$('#postTag').val()});
+			postArea.val('');
+			$("#resourceTag").css('background-color','transparent');
+			$("#questionTag").css('background-color','transparent');
+			$("#postTag").val('');
 		});
 
 		socket.on('post', function(msg){
 			$('#postTag').val('');
-			var newMessage = $('<div/>', {
+			var newMessage = $('<div>', {
 				text: msg.who+": \'"+msg.post+"\' ("+msg.tag+")"
 			}).appendTo(backchannel);
 		});
@@ -58,7 +61,7 @@
 
 		//will probably ditch this functionality as it would be cumbersome for b$
 		socket.on("update", function(msg) {
-			var newMessage = $('<div/>', {                  
+			var newMessage = $('<div>', {                  
 			$text: msg
 			}).appendTo("#backchannel");
 		});
