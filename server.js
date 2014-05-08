@@ -12,6 +12,7 @@ app.use(express.static(__dirname + ''));
 io.sockets.on('connection', function(socket){
     socket.on("join", function(name){
         users[socket.sessionid] = name;
+		console.log(users);
         socket.emit("update", "You have connected to the server.");
         io.sockets.emit("update", name + " has joined the server.")
         io.sockets.emit("update-users", users);

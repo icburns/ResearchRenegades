@@ -58,18 +58,21 @@
 
 		//will probably ditch this functionality as it would be cumbersome for b$
 		socket.on("update", function(msg) {
-			var newMessage = $('<div/>', {                  $
-				text: msg
+			var newMessage = $('<div/>', {                  
+			$text: msg
 			}).appendTo("#backchannel");
 		});
 
 		// will repopulate users on a (dis)connection
 		socket.on("update-users", function(currentUsers){
-			$("#users").empty();
+			$("#onlineUsers").empty();
 			$.each(currentUsers, function(clientid, name) {
-				$('#users').append(name);
+				var userElement = $("<li>", {id: "user_"+name});
+				userElement.html(name);
+				$('#onlineUsers').append(userElement);
 			});
 		});
+
 
 		socket.on("disconnect", function(){
 			$("#msgs").append("The server is not available");
