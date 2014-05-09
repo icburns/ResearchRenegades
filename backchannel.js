@@ -35,22 +35,58 @@
 
 		postForm.submit(function(e){
 			e.preventDefault();
-			socket.emit('send', {"post":postArea.val(), "name":socket.socket.sessionid, "tag":$('#postTag').val()});
+			socket.emit('send', {"post":postArea.val(), "tag":$('#postTag').val(), "time":e.timeStamp});
 			postArea.val('');
 			$("#resourceTag").css('background-color','transparent');
 			$("#questionTag").css('background-color','transparent');
 			$("#postTag").val('');
 		});
 
-		socket.on('post', function(msg){
-			$('#postTag').val('');
-			var newMessage = $('<div>', {
-				text: msg.who+": \'"+msg.post+"\' ("+msg.tag+")"
-			}).appendTo(backchannel);
+		socket.on('post', function(messageToPost){
+			var newPostMarkup = makePostMarkup(messageToPost);
+			$("#backchannel").append(newPostMarkup);
 		});
 
+		
+		function makePostMarkup(messageToPost){
+			var wrapper = $('<div>', {
+				class: "backchannelPost "+messageToPost.tag
+			})
+			var name = $('<span>', {
+				class: "post_name",
+				text: messageToPost.name
+			})
+			var timestamp =$('<time>', {
+				class: "post_time",
+				text: messageToPost.timestamp
+			})
+			var post = $('<p>', {
+				class: "post_message",
+				text: messageToPost.text
+			})
+			
+			wrapper.append(name);
+			wrapper.append(timestamp);
+			wrapper.append(post);
+			
+			if(messageToPost.tag === 'question' || messageToPost.tag === 'resource'){
+				var childPosts = $('<div>', {
+				class: postTag
+				})
+				for(var reply in messageToPost.repies){
+					var newReply = makePostMarkup(reply);
+					childPosts.append(newReply);
+				}
+			}
+			return wrapper;
+		}
+		
+		
+		
+		//login actions
 		$("#username").keyup(function(e){
 			if(e.which == 13) {
+				$("#filter").css('position','absolute');
 				var name = $("#username").val();
 				if (name != "") {
 					socket.emit("join", name);
@@ -62,7 +98,7 @@
 		//will probably ditch this functionality as it would be cumbersome for b$
 		socket.on("update", function(msg) {
 			var newMessage = $('<div>', {                  
-			$text: msg
+				text: msg
 			}).appendTo("#backchannel");
 		});
 
@@ -70,8 +106,7 @@
 		socket.on("update-users", function(currentUsers){
 			$("#onlineUsers").empty();
 			$.each(currentUsers, function(clientid, name) {
-				var userElement = $("<li>", {id: "user_"+name});
-				userElement.html(name);
+				var userElement = $("<li>", {id: "user_"+name, text:name});
 				$('#onlineUsers').append(userElement);
 			});
 		});
