@@ -5,7 +5,7 @@ var express = require('express'),
 	io = require('socket.io').listen(server);
 	users = {},
 	posts = {},
-	postCount = 1; 
+	postCount = 0; 
 
 server.listen(port);
 
@@ -14,9 +14,13 @@ app.use(express.static(__dirname + ''));
 io.sockets.on('connection', function(socket){
     socket.on("join", function(name){
         users[socket.id] = name;
-		console.log(users);
-        io.sockets.emit("update", name + " has joined the server.")
+		console.log(posts);
+ //       io.sockets.emit("update", name + " has joined the server.")
         io.sockets.emit("update-users", users);
+		for(var ii=1; ii<=postCount; ii++){
+			console.log(posts[ii]);
+			socket.emit("post", posts[ii]);
+		}
     });
 
 	socket.on("send", function(msg){

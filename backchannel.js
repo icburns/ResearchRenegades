@@ -8,13 +8,17 @@
 
 
 	var UISpace = function(){
+		$("#content").hide();
 		$('#questionTag').click(function() {
 			tagPost('question','rgba(100,100,200,1)');
 		});
 			$('#resourceTag').click(function() {
 			tagPost('resource','rgba(100,200,100,1)');
 		});
-
+		$('input[name=Questions]').prop("checked",true);
+		$('input[name=Resources]').prop("checked",true);		
+		$('input[name=General]').prop("checked",true);
+		
 		function tagPost(tagValue,tagColor){
 			$("#resourceTag").css('background-color','transparent');
 			$("#questionTag").css('background-color','transparent');
@@ -32,10 +36,11 @@
 		var postForm = $('form[name=makeNewPost]');
 		var backchannel = $('#backchannel');
 		var postArea = $('#postArea');
-
+		
 		postForm.submit(function(e){
 			e.preventDefault();
-			socket.emit('send', {"post":postArea.val(), "tag":$('#postTag').val(), "time":e.timeStamp});
+			var dateTime = new Date();
+			socket.emit('send', {"post":postArea.val(), "tag":$('#postTag').val(), "timestamp":dateTime.toUTCString()});
 			postArea.val('');
 			$("#resourceTag").css('background-color','transparent');
 			$("#questionTag").css('background-color','transparent');
@@ -45,28 +50,32 @@
 		socket.on('post', function(messageToPost){
 			var newPostMarkup = makePostMarkup(messageToPost);
 			$("#backchannel").append(newPostMarkup);
+			$("#backchannel").animate({ scrollTop: $('#backchannel').height()}, 1000);
 		});
 
 		
 		function makePostMarkup(messageToPost){
 			var wrapper = $('<div>', {
 				class: "backchannelPost "+messageToPost.tag
-			})
+			});
+			var t = Date.parse(messageToPost.timestamp);
+			var d = new Date();
+			d.setTime(t);
+			var timestamp =$('<time>', {
+				class: "post_time",
+				text: d.toLocaleString()
+			});
 			var name = $('<span>', {
 				class: "post_name",
 				text: messageToPost.name
-			})
-			var timestamp =$('<time>', {
-				class: "post_time",
-				text: messageToPost.timestamp
-			})
+			});
 			var post = $('<p>', {
 				class: "post_message",
 				text: messageToPost.text
-			})
+			});
 			
-			wrapper.append(name);
 			wrapper.append(timestamp);
+			wrapper.append(name);
 			wrapper.append(post);
 			
 			if(messageToPost.tag === 'question' || messageToPost.tag === 'resource'){
@@ -89,18 +98,22 @@
 				$("#filter").css('position','absolute');
 				var name = $("#username").val();
 				if (name != "") {
+					$("#backchannel").html('');
 					socket.emit("join", name);
-					$("#login").detach();
+					$("#login").hide(500,function(){
+						$("#login").detach();
+					});
+					$("#content").show();
 				}
 			}
 		});
 
 		//will probably ditch this functionality as it would be cumbersome for b$
-		socket.on("update", function(msg) {
-			var newMessage = $('<div>', {                  
-				text: msg
-			}).appendTo("#backchannel");
-		});
+//		socket.on("update", function(msg) {
+//			var newMessage = $('<div>', {                  
+//				text: msg
+//			}).appendTo("#backchannel");
+//		});
 
 		// will repopulate users on a (dis)connection
 		socket.on("update-users", function(currentUsers){
@@ -113,9 +126,9 @@
 
 
 		socket.on("disconnect", function(){
-			$("#msgs").append("The server is not available");
-			$("#msg").attr("disabled", "disabled");
-			$("#send").attr("disabled", "disabled");
+			$("#backchannel").append("The server is not available");
+			$("#postArea").attr("disabled", "disabled");
+			$("#submitPost").attr("disabled", "disabled");
 		});
 	}
 })();
