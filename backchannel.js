@@ -29,6 +29,14 @@
 			$("#"+tagValue+"Tag").css('background-color',tagColor);
 			$('#postTag').val(tagValue);
 		}
+		
+		$("#postArea").keyup(function(e){
+			if(e.which == 13 && !e.shiftKey){
+				e.preventDefault();
+				$('form[name=makeNewPost]').submit();
+			}
+		});
+		
 	}
 
 	var ServerSpace = function(){
@@ -37,7 +45,8 @@
 		var backchannel = $('#backchannel');
 		var postArea = $('#postArea');
 		
-		postForm.submit(function(e){
+		
+		postForm.submit(function submitPost(e){
 			e.preventDefault();
 			var dateTime = new Date();
 			socket.emit('send', {"post":postArea.val(), "tag":$('#postTag').val(), "timestamp":dateTime.toUTCString()});
@@ -50,10 +59,10 @@
 		socket.on('post', function(messageToPost){
 			var newPostMarkup = makePostMarkup(messageToPost);
 			$("#backchannel").append(newPostMarkup);
-			$("#backchannel").animate({ scrollTop: $('#backchannel').height()}, 1000);
+			$("#backchannel").animate({ scrollTop: $('#backchannel').height()}, 100);
 		});
 
-		
+		//post data from server applied to backchannel post template
 		function makePostMarkup(messageToPost){
 			var wrapper = $('<div>', {
 				class: "backchannelPost "+messageToPost.tag
@@ -69,18 +78,28 @@
 				class: "post_name",
 				text: messageToPost.name
 			});
-			var post = $('<p>', {
-				class: "post_message",
-				text: messageToPost.text
+			var post = $('<div>', {
+				class: "post_message"
+			});
+			var splitText = messageToPost.text.split("\n");
+			for(var ii=0; ii<splitText.length; ii++){
+				var postText = $('<p>', {
+					text: splitText[ii]
+				});				
+				post.append(postText);
+			}
+			var postInfo =$('<div>', {
+				class: "post_info"
 			});
 			
-			wrapper.append(timestamp);
-			wrapper.append(name);
+			postInfo.append(name);
+			postInfo.append(timestamp)
+			wrapper.append(postInfo);
 			wrapper.append(post);
 			
 			if(messageToPost.tag === 'question' || messageToPost.tag === 'resource'){
 				var childPosts = $('<div>', {
-				class: postTag
+				class: messageToPost.tag
 				})
 				for(var reply in messageToPost.repies){
 					var newReply = makePostMarkup(reply);
