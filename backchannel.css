@@ -54,6 +54,7 @@ section{
 }
 
 #posts{
+	padding-top:30px;
 	width:60%;
 	position:relative;	
 }
@@ -73,16 +74,15 @@ section{
 #backchannel{
 	height:80%;
 	border:solid 1px rgba(25,25,25,1);
-	padding:5%;
+	padding-left:5%;
+	padding-right:5%;
 	overflow-y:auto;
-
 }
 
 #filter{
 	background-color:rgba(200,200,200,1);
-	height:5%;
-	position:fixed;
-	z-index:-1;
+	height:30px;
+	position:absolute;
 	top:0;
 	left:0;
 }

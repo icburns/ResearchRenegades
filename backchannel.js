@@ -15,9 +15,6 @@
 			$('#resourceTag').click(function() {
 			tagPost('resource','rgba(100,200,100,1)');
 		});
-		$('input[name=Questions]').prop("checked",true);
-		$('input[name=Resources]').prop("checked",true);		
-		$('input[name=General]').prop("checked",true);
 		
 		function tagPost(tagValue,tagColor){
 			$("#resourceTag").css('background-color','transparent');
@@ -29,6 +26,24 @@
 			$("#"+tagValue+"Tag").css('background-color',tagColor);
 			$('#postTag').val(tagValue);
 		}
+		
+		$('input[name=Questions]').prop("checked",true);
+		$('input[name=Resources]').prop("checked",true);		
+		$('input[name=General]').prop("checked",true);
+	
+		$('input[name=Questions]').on("change",function(e){
+			$('.question').toggle();
+		});
+		$('input[name=Resources]').on("change",function(e){
+			$('.resource').toggle();
+		});		
+		$('input[name=General]').on("change",function(e){
+			$('.backchannelPost').toggle();
+			$('.question').toggle();
+			$('.resource').toggle();
+		});
+		
+		
 		
 		$("#postArea").keyup(function(e){
 			if(e.which == 13 && !e.shiftKey){
@@ -59,7 +74,7 @@
 		socket.on('post', function(messageToPost){
 			var newPostMarkup = makePostMarkup(messageToPost);
 			$("#backchannel").append(newPostMarkup);
-			$("#backchannel").animate({ scrollTop: $('#backchannel').height()}, 100);
+			$("#backchannel").animate({ scrollTop: $('#backchannel').height()}, 0);
 		});
 
 		//post data from server applied to backchannel post template
@@ -119,7 +134,7 @@
 				if (name != "") {
 					$("#backchannel").html('');
 					socket.emit("join", name);
-					$("#login").hide(500,function(){
+					$("#login").fadeOut(250,function(){
 						$("#login").detach();
 					});
 					$("#content").show();
