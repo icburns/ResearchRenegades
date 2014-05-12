@@ -111,7 +111,7 @@ section{
 /*
 * posts
 */
-.backchannelPost{
+.backchannelPost, .backchannelReply{
 	padding: 1%;
 	margin-top:1%;
 	min-height:50px;
@@ -145,7 +145,7 @@ section{
 	float:left;
 }
 
-.backchannelPost time{
+time{
 	color:rgba(0,0,0,.8);
 	font-size:.5em;
 }
@@ -210,7 +210,7 @@ textarea{
 	overflow:auto;
 	resize:none;
 }
-.postArea{
+#postArea{
 	height:100%;
 	width:55%;
 	margin-left:2.5%;

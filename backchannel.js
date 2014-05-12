@@ -6,13 +6,18 @@
 		UISpace();
 	});
 
-
+	//anything that does not involve server communication
 	var UISpace = function(){
+		//initiate page with welcome/login tripwire
 		$("#content").hide();
+		
+		//enable post tagging
 		$('#questionTag').click(function() {
+			$('#postArea').focus();
 			tagPost('question','rgba(100,100,200,1)');
 		});
-			$('#resourceTag').click(function() {
+		$('#resourceTag').click(function() {
+			$('#postArea').focus();
 			tagPost('resource','rgba(100,200,100,1)');
 		});
 		
@@ -27,6 +32,7 @@
 			$('#postTag').val(tagValue);
 		}
 		
+		//set default backchannel filters to show all and enable filtering
 		$('input[name=Questions]').prop("checked",true);
 		$('input[name=Resources]').prop("checked",true);		
 		$('input[name=General]').prop("checked",true);
@@ -43,6 +49,7 @@
 			$('.resource').toggle();
 		});
 		
+		//allow enter to submit posts in the main posts area
 		$("#postArea").keyup(function(e){
 			if(e.which == 13 && !e.shiftKey){
 				e.preventDefault();
@@ -52,6 +59,7 @@
 		
 	}
 
+	//anything that involves communication with the server
 	var ServerSpace = function(){
 		var socket = io.connect();
 		var postForm = $('form[name=makeNewPost]');
@@ -59,6 +67,7 @@
 		var postArea = $('#postArea');
 		
 		
+		//submits a post for the backchannel
 		postForm.submit(function submitPost(e){
 			e.preventDefault();
 			var dateTime = new Date();
@@ -69,16 +78,28 @@
 			$("#postTag").val('');
 		});
 
+		//receives post from server and posts to backchannel
 		socket.on('post', function(messageToPost){
-			var newPostMarkup = makePostMarkup(messageToPost);
+			var newPostMarkup = makePostMarkup("backchannelPost", messageToPost);
 			$("#backchannel").append(newPostMarkup);
 			$("#backchannel").animate({ scrollTop: $('#backchannel').height()}, 0);
 		});
+		
+		//receives post from server and posts to backchannel
+		socket.on('reply', function(replyToPost){
+			var parentPost = $(".backchannelPost")[replyToPost.parentIndex];
+			var replyBox = $(parentPost).children(".replies").children("textarea");
+			$(makePostMarkup("backchannelReply",replyToPost)).insertBefore($(replyBox));	
+
+//			$(parentPost).children(".replies").append(makePostMarkup(replyToPost));
+
+		});
+		
 
 		//post data from server applied to backchannel post template
-		function makePostMarkup(messageToPost){
+		function makePostMarkup(postType, messageToPost){
 			var wrapper = $('<div>', {
-				class: "backchannelPost "+messageToPost.tag
+				class: postType+" "+messageToPost.tag
 			});
 			var t = Date.parse(messageToPost.timestamp);
 			var d = new Date();
@@ -110,6 +131,7 @@
 			wrapper.append(postInfo);
 			wrapper.append(post);
 			
+			//special actions for tagged posts, configures replies
 			if(messageToPost.tag === 'question' || messageToPost.tag === 'resource'){
 				var expandPostTab = $('<div>', {
 					class: "post_actions",
@@ -124,13 +146,23 @@
 				var childPosts = $('<div>', {
 					class: "replies"
 				});
-				for(var reply in messageToPost.repies){
-					var newReply = makePostMarkup(reply);
-					childPosts.append(newReply);
+				if(messageToPost.replies){
+					for(var ii=0; ii<messageToPost.replies.length; ii++){
+						var newReply = makePostMarkup("backchannelReply",messageToPost.replies[ii]);
+						childPosts.append(newReply);
+					}
 				}
 				var replyBox = $('<textarea>', {
-					class: "reply"
-//					keyup: function(e){postReply(e)}
+					class: "reply",
+					keyup: function(e){
+						if(e.which == 13 && !e.shiftKey){
+							e.preventDefault();
+							var dateTime = new Date();
+							// !!!parent workaround is suspect
+							socket.emit('reply', {"post":$(this).val(), "timestamp":dateTime.toUTCString(),"parent":$('.backchannelPost').index($(this).parent().parent())});
+							$(this).val('');
+						}
+					}
 				});
 				childPosts.append(replyBox);
 				childPosts.hide();
@@ -139,17 +171,7 @@
 			return wrapper;
 		}
 		
-		function postReply(e){
-			if(e.which == 13 && !e.shiftKey){
-				e.preventDefault();
-				var dateTime = new Date();
-				socket.emit('reply', {"post":this.val(), "timestamp":dateTime.toUTCString()});
-				this.val('');
-			}
-		}
-		
-		
-		//login actions
+		//login actions, removes welcome page and reveals backchannel
 		$("#username").keyup(function(e){
 			if(e.which == 13) {
 				$("#filter").css('position','absolute');
@@ -175,4 +197,3 @@
 		});
 	}
 })();
-

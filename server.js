@@ -39,15 +39,25 @@ io.sockets.on('connection', function(socket){
     });
 
 	socket.on("reply", function(msg){
-//		var replyCount = 
-//		replyCount++;
+		var postIndex = parseInt(1+msg.parent);
+		console.log(postIndex);
+		console.log(currentPost);		
+		var currentPost = posts[postIndex];
+		if(!currentPost.replies){
+			currentPost.replies = [];
+		}
 		var newReply = {};
-//		newReply.id = postCount;
 		newReply.timestamp = msg.timestamp;
+		newReply.tag = '';
 		newReply.name = users[socket.id];
 		newReply.text = msg.post;
-//		posts[postCount] = newPost;
+		newReply.parentIndex = msg.parent;
+		currentPost.replies[currentPost.replies.length] = newReply;
+		posts[postIndex] = currentPost;
         io.sockets.emit("reply", newReply);
+		
+		console.log(posts)
+		
     });	
 	
 	
