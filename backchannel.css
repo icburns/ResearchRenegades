@@ -64,8 +64,7 @@ section{
 /*
 ** Left Column
 */
-#ribbon{
-	border:solid 1px rgba(25,25,25,1);	
+#ribbon{	
 }
 
 /*
@@ -73,7 +72,6 @@ section{
 */
 #backchannel{
 	height:80%;
-	border:solid 1px rgba(25,25,25,1);
 	padding-left:5%;
 	padding-right:5%;
 	overflow-y:auto;
@@ -114,7 +112,6 @@ section{
 * posts
 */
 .backchannelPost{
-	z-index:-2;
 	padding: 1%;
 	margin-top:1%;
 	min-height:50px;
@@ -156,9 +153,27 @@ section{
 .post_message{
 }
 
+.post_actions{
+	text-align:right;
+	float:right;
+	clear:both;
+	width:auto;
+}
+
+.replies{
+	background-color:rgba(255,255,255,.5);
+	padding:5%;
+	padding-left:20%;
+	float:left;
+	clear:both;
+}
+
+
+/*
+* submit area
+*/
 #newPost{
 	height:20%;
-	border:solid 1px rgba(25,25,25,1);
 }
 
 
@@ -191,36 +206,30 @@ section{
 	opacity: .9;
 }
 
+textarea{
+	overflow:auto;
+	resize:none;
+}
 .postArea{
 	height:100%;
 	width:55%;
 	margin-left:2.5%;
 	margin-right:2.5%;
 	float:left;
-	overflow:auto;
-	resize:none;
 }
 
 .submitPost{
 	float:left;
 	width:20%;
-	position: relative;
 	top: 25%;
+	position:absolute;
 	height:50%;
 }
 
 /*
 ** Right Column
 */
-#usersChat{
-	border:solid 1px rgba(25,25,25,1);
-}
-
-#chat{
-	border:solid 1px rgba(25,25,25,1);
-}
-
-#users{
+header, #usersChat, #newPost, #ribbon, #backchannel, #chat{
 	border:solid 1px rgba(25,25,25,1);
 }
 
@@ -234,7 +243,10 @@ section{
 	padding-left:10%;
 }
 
-li:hover{
+/*
+* clickables
+*/
+.post_actions:hover, li:hover, #ribbon>div:hover{
 	background-color:rgba(255,255,255,.5);
 	cursor:pointer;
 }
@@ -244,5 +256,5 @@ li:hover{
 }
 
 #onlineTA>li:hover{
-	background-color:rgba(0,0,255,.5);
+	background-color:rgba(100,100,200,.75);
 }

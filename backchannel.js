@@ -43,8 +43,6 @@
 			$('.resource').toggle();
 		});
 		
-		
-		
 		$("#postArea").keyup(function(e){
 			if(e.which == 13 && !e.shiftKey){
 				e.preventDefault();
@@ -113,17 +111,42 @@
 			wrapper.append(post);
 			
 			if(messageToPost.tag === 'question' || messageToPost.tag === 'resource'){
+				var expandPostTab = $('<div>', {
+					class: "post_actions",
+					text: "|reply|",
+					click: function(e){
+						console.log(this);
+						console.log(e);
+						$(this).parent().children(".replies").toggle();
+        			}
+				});
+				wrapper.append(expandPostTab);
 				var childPosts = $('<div>', {
-				class: messageToPost.tag
-				})
+					class: "replies"
+				});
 				for(var reply in messageToPost.repies){
 					var newReply = makePostMarkup(reply);
 					childPosts.append(newReply);
 				}
+				var replyBox = $('<textarea>', {
+					class: "reply"
+//					keyup: function(e){postReply(e)}
+				});
+				childPosts.append(replyBox);
+				childPosts.hide();
+				wrapper.append(childPosts);
 			}
 			return wrapper;
 		}
 		
+		function postReply(e){
+			if(e.which == 13 && !e.shiftKey){
+				e.preventDefault();
+				var dateTime = new Date();
+				socket.emit('reply', {"post":this.val(), "timestamp":dateTime.toUTCString()});
+				this.val('');
+			}
+		}
 		
 		
 		//login actions
@@ -142,13 +165,6 @@
 			}
 		});
 
-		//will probably ditch this functionality as it would be cumbersome for b$
-//		socket.on("update", function(msg) {
-//			var newMessage = $('<div>', {                  
-//				text: msg
-//			}).appendTo("#backchannel");
-//		});
-
 		// will repopulate users on a (dis)connection
 		socket.on("update-users", function(currentUsers){
 			$("#onlineUsers").empty();
@@ -157,12 +173,6 @@
 				$('#onlineUsers').append(userElement);
 			});
 		});
-
-
-		socket.on("disconnect", function(){
-			$("#backchannel").append("The server is not available");
-			$("#postArea").attr("disabled", "disabled");
-			$("#submitPost").attr("disabled", "disabled");
-		});
 	}
 })();
+

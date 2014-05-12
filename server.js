@@ -38,6 +38,19 @@ io.sockets.on('connection', function(socket){
         io.sockets.emit("post", newPost);
     });
 
+	socket.on("reply", function(msg){
+//		var replyCount = 
+//		replyCount++;
+		var newReply = {};
+//		newReply.id = postCount;
+		newReply.timestamp = msg.timestamp;
+		newReply.name = users[socket.id];
+		newReply.text = msg.post;
+//		posts[postCount] = newPost;
+        io.sockets.emit("reply", newReply);
+    });	
+	
+	
     socket.on("disconnect", function(){
         io.sockets.emit("update", users[socket.id] + " has left the server.");
         delete users[socket.id];
