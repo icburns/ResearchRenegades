@@ -82,7 +82,7 @@
 		socket.on('post', function(messageToPost){
 			var newPostMarkup = makePostMarkup("backchannelPost", messageToPost);
 			$("#backchannel").append(newPostMarkup);
-			$("#backchannel").animate({ scrollTop: $('#backchannel').height()}, 0);
+			$("#backchannel").animate({ scrollTop: $('#backchannel')[0].scrollHeight}, 0);
 		});
 		
 		//receives post from server and posts to backchannel
@@ -183,6 +183,7 @@
 						$("#login").detach();
 					});
 					$("#content").show();
+					$("#postArea").focus();
 				}
 			}
 		});

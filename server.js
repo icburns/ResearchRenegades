@@ -13,12 +13,14 @@ app.use(express.static(__dirname + ''));
 
 io.sockets.on('connection', function(socket){
     socket.on("join", function(name){
-        users[socket.id] = name;
-		console.log(posts);
- //       io.sockets.emit("update", name + " has joined the server.")
+		var username = ""+name.trim();
+		users[socket.id] = username;
+		
+		if(!username || username.length>24){
+			username = username.substr(0,24);
+		}
         io.sockets.emit("update-users", users);
 		for(var ii=1; ii<=postCount; ii++){
-			console.log(posts[ii]);
 			socket.emit("post", posts[ii]);
 		}
     });
@@ -26,6 +28,9 @@ io.sockets.on('connection', function(socket){
 	socket.on("send", function(msg){
 		postCount++;
 		var newPost = {};
+		if(!msg.post || msg.post.length>250){
+			msg.post = msg.post.substr(0,250);
+		}
 		if(msg.tag != "resource" && msg.tag != "question"){
 			msg.tag = "";
 		}
@@ -33,30 +38,29 @@ io.sockets.on('connection', function(socket){
 		newPost.tag = msg.tag;
 		newPost.timestamp = msg.timestamp;
 		newPost.name = users[socket.id];
-		newPost.text = msg.post;
+		newPost.text = msg.post.trim();
 		posts[postCount] = newPost;
         io.sockets.emit("post", newPost);
     });
 
 	socket.on("reply", function(msg){
-		var postIndex = parseInt(1+msg.parent);
-		console.log(postIndex);
-		console.log(currentPost);		
+		var postIndex = parseInt(1+msg.parent);		
 		var currentPost = posts[postIndex];
 		if(!currentPost.replies){
 			currentPost.replies = [];
+		}
+		if(!msg.post || msg.post.length>250){
+			msg.post = msg.post.substr(0,250);
 		}
 		var newReply = {};
 		newReply.timestamp = msg.timestamp;
 		newReply.tag = '';
 		newReply.name = users[socket.id];
-		newReply.text = msg.post;
+		newReply.text = msg.post.trim();
 		newReply.parentIndex = msg.parent;
 		currentPost.replies[currentPost.replies.length] = newReply;
 		posts[postIndex] = currentPost;
         io.sockets.emit("reply", newReply);
-		
-		console.log(posts)
 		
     });	
 	
