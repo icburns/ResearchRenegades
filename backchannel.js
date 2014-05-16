@@ -65,8 +65,7 @@
 		var postForm = $('form[name=makeNewPost]');
 		var backchannel = $('#backchannel');
 		var postArea = $('#postArea');
-		
-		
+			
 		//submits a post for the backchannel
 		postForm.submit(function submitPost(e){
 			e.preventDefault();
@@ -90,9 +89,6 @@
 			var parentPost = $(".backchannelPost")[replyToPost.parentIndex];
 			var replyBox = $(parentPost).children(".replies").children("textarea");
 			$(makePostMarkup("backchannelReply",replyToPost)).insertBefore($(replyBox));	
-
-//			$(parentPost).children(".replies").append(makePostMarkup(replyToPost));
-
 		});
 		
 
@@ -137,8 +133,6 @@
 					class: "post_actions",
 					text: "|reply|",
 					click: function(e){
-						console.log(this);
-						console.log(e);
 						$(this).parent().children(".replies").toggle();
         			}
 				});
