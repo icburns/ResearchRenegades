@@ -1,31 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
+	<head>  
 			<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 			<script src="/socket.io/socket.io.js"></script>
 			<title>Backchannel</title>
 			<meta charset="UTF-8">
 			<link href="backchannel.css" type="text/css" rel="stylesheet">
-
 	</head>
 
 	<body>
-			<header>
+			<header id='infoheader'>
 					Informatics 200 A
 			</header>
 
 			<section id='login'>
-					PLEASE ENTER A USERNAME:
+					PLEASE ENTER A USERNAME SIR:
 					<input maxlength="24" id='username' type='text'>
-					<iframe srcdoc="<p>INSTRUCTIONAL VIDEO PLACEHOLDER</p>"></iframe>
+					<!--<iframe srcdoc="<p>INSTRUCTIONAL VIDEO PLACEHOLDER</p>"></iframe>-->
 			</section>
 			<div id='content'>
 				<section id="ribbon">
-						<div>Topics</div>
-						<div>Answered Q's</div>
-						<div>Unanswered Q's</div>
-						<div>Resources</div>
-						<div>My Questions</div>
+					<div class="nav">Topics</div>
+					<div class="nav">Answered Q's</div>
+					<div class="nav">Unanswered Q's</div>
+					<div class="nav">Resources</div>
+					<div class="nav">My Questions</div>
 				</section>
 
 				<section id='posts'>
@@ -47,7 +46,7 @@
 										</div>
 										<textarea id='postArea' type='text'></textarea>
 								  <input type='hidden' id='postTag' value=''>
-										<input class='submitPost' value='post' type='submit'>
+										<input class='submitPost' value='Post' type='submit'>
 								</form>
 						</div>
 				</section>
