@@ -5,7 +5,7 @@ var express = require('express'),
 	io = require('socket.io').listen(server);
 	users = {},
 	posts = {},
-	postCount = 0; 
+	postCount = 0;
 
 server.listen(port);
 
@@ -13,34 +13,42 @@ app.use(express.static(__dirname + ''));
 
 io.sockets.on('connection', function(socket){
     socket.on("join", function(name){
-		var username = ""+name.trim();
-		users[socket.id] = username;
-		
-		if(!username || username.length>24){
-			username = username.substr(0,24);
-		}
-        io.sockets.emit("update-users", users);
-		for(var ii=1; ii<=postCount; ii++){
-			socket.emit("post", posts[ii]);
+		//require name
+		if(name.length>0){
+			var username = ""+name.trim();
+			users[socket.id] = username;
+			
+			if(!username || username.length>24){
+				username = username.substr(0,24);
+			}
+			io.sockets.emit("update-users", users);
+			for(var ii=1; ii<=postCount; ii++){
+				socket.emit("post", posts[ii]);
+			}
 		}
     });
 
 	socket.on("send", function(msg){
-		postCount++;
-		var newPost = {};
-		if(!msg.post || msg.post.length>250){
-			msg.post = msg.post.substr(0,250);
+		//check for ghost users
+		if(users[socket.id]){
+			postCount++;
+			var newPost = {};
+			//truncate post to character limit
+			if(!msg.post || msg.post.length>250){
+				msg.post = msg.post.substr(0,250);
+			}
+			//apply tag
+			if(msg.tag != "resource" && msg.tag != "question"){
+				msg.tag = "";
+			}
+			newPost.id = postCount;
+			newPost.tag = msg.tag;
+			newPost.timestamp = msg.timestamp;
+			newPost.name = users[socket.id];
+			newPost.text = msg.post.trim();
+			posts[postCount] = newPost;
+			io.sockets.emit("post", newPost);
 		}
-		if(msg.tag != "resource" && msg.tag != "question"){
-			msg.tag = "";
-		}
-		newPost.id = postCount;
-		newPost.tag = msg.tag;
-		newPost.timestamp = msg.timestamp;
-		newPost.name = users[socket.id];
-		newPost.text = msg.post.trim();
-		posts[postCount] = newPost;
-        io.sockets.emit("post", newPost);
     });
 
 	socket.on("reply", function(msg){

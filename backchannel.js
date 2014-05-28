@@ -32,22 +32,42 @@
 			$('#postTag').val(tagValue);
 		}
 		
+		//make question and resource replies available on click of post
+		$(".question").click(function(){
+			$(this).children(".replies").toggle();
+        });
+		$(".resource").click(function(){
+			$(this).children(".replies").toggle();
+        });
+		
 		//set default backchannel filters to show all and enable filtering
 		$('input[name=Questions]').prop("checked",true);
 		$('input[name=Resources]').prop("checked",true);		
 		$('input[name=General]').prop("checked",true);
 	
-		$('input[name=Questions]').on("change",function(e){
-			$('.question').toggle();
-		});
-		$('input[name=Resources]').on("change",function(e){
-			$('.resource').toggle();
-		});		
-		$('input[name=General]').on("change",function(e){
-			$('.backchannelPost').toggle();
-			$('.question').toggle();
-			$('.resource').toggle();
-		});
+		$('input[name=Questions]').on("change",applyFilters);
+		$('input[name=Resources]').on("change",applyFilters);		
+		$('input[name=General]').on("change",applyFilters);
+		
+		//toggle post visibility based on filter state
+		function applyFilters(){
+			$('.question').hide();
+			$('.resource').hide();
+			$('.backchannelPost').hide();
+			if($('input[name=General]').prop("checked")){
+				$('.backchannelPost').show();
+				$('.question').hide();
+				$('.resource').hide();	
+			}
+			if($('input[name=Questions]').prop("checked")){
+				$('.question').show();
+			}
+			if($('input[name=Resources]').prop("checked")){
+				$('.resource').show();
+			}
+		}
+
+		
 		
 		//allow enter to submit posts in the main posts area
 		$("#postArea").keyup(function(e){
@@ -56,7 +76,7 @@
 				$('form[name=makeNewPost]').submit();
 			}
 		});
-		
+				
 	}
 
 	//anything that involves communication with the server
@@ -81,6 +101,20 @@
 		socket.on('post', function(messageToPost){
 			var newPostMarkup = makePostMarkup("backchannelPost", messageToPost);
 			$("#backchannel").append(newPostMarkup);
+			$('.question').hide();
+			$('.resource').hide();
+			$('.backchannelPost').hide();
+			if($('input[name=General]').prop("checked")){
+				$('.backchannelPost').show();
+				$('.question').hide();
+				$('.resource').hide();	
+			}
+			if($('input[name=Questions]').prop("checked")){
+				$('.question').show();
+			}
+			if($('input[name=Resources]').prop("checked")){
+				$('.resource').show();
+			}
 			$("#backchannel").animate({ scrollTop: $('#backchannel')[0].scrollHeight}, 0);
 		});
 		
@@ -192,3 +226,4 @@
 		});
 	}
 })();
+
