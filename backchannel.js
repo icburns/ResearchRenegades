@@ -58,8 +58,6 @@
 				$('.resource').show();
 			}
 		}
-
-		
 		
 		//allow enter to submit posts in the main posts area
 		$("#postArea").keyup(function(e){
@@ -84,8 +82,8 @@
 			var dateTime = new Date();
 			socket.emit('send', {"post":postArea.val(), "tag":$('#postTag').val(), "timestamp":dateTime.toUTCString()});
 			postArea.val('');
-			$("#resourceTag").css('background-color','transparent');
-			$("#questionTag").css('background-color','transparent');
+			$("#resourceTag").css('background-color','rgba(200,200,200,.75)');
+			$("#questionTag").css('background-color','rgba(200,200,200,.75)');
 			$("#postTag").val('');
 		});
 
@@ -140,7 +138,7 @@
 			var splitText = messageToPost.text.split("\n");
 			for(var ii=0; ii<splitText.length; ii++){
 				var postText = $('<p>', {
-					text: splitText[ii]
+					html: splitText[ii]
 				});				
 				post.append(postText);
 			}
