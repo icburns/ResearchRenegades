@@ -22,23 +22,15 @@
 		});
 		
 		function tagPost(tagValue,tagColor){
-			$("#resourceTag").css('background-color','transparent');
-			$("#questionTag").css('background-color','transparent');
+			$("#resourceTag").css('background-color','rgba(200,200,200,.75);');
+			$("#questionTag").css('background-color','rgba(200,200,200,.75);');
 			if($('#postTag').val()==tagValue){
-				tagColor = 'transparent';
+				tagColor = 'rgba(200,200,200,.75);';
 				tagValue = '';
 			}
 			$("#"+tagValue+"Tag").css('background-color',tagColor);
 			$('#postTag').val(tagValue);
 		}
-		
-		//make question and resource replies available on click of post
-		$(".question").click(function(){
-			$(this).children(".replies").toggle();
-        });
-		$(".resource").click(function(){
-			$(this).children(".replies").toggle();
-        });
 		
 		//set default backchannel filters to show all and enable filtering
 		$('input[name=Questions]').prop("checked",true);
@@ -163,12 +155,12 @@
 			
 			//special actions for tagged posts, configures replies
 			if(messageToPost.tag === 'question' || messageToPost.tag === 'resource'){
+				wrapper.click(function(){
+					$(this).children(".replies").toggle();
+				});
 				var expandPostTab = $('<div>', {
 					class: "post_actions",
 					text: "|reply|",
-					click: function(e){
-						$(this).parent().children(".replies").toggle();
-        			}
 				});
 				wrapper.append(expandPostTab);
 				var childPosts = $('<div>', {
@@ -182,6 +174,9 @@
 				}
 				var replyBox = $('<textarea>', {
 					class: "reply",
+					click: function(clickEvent) {
+						clickEvent.stopPropagation();
+					},
 					keyup: function(e){
 						if(e.which == 13 && !e.shiftKey){
 							e.preventDefault();
@@ -226,4 +221,3 @@
 		});
 	}
 })();
-

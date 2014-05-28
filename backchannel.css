@@ -245,8 +245,12 @@ header, #usersChat, #newPost, #ribbon, #backchannel, #chat{
 /*
 * clickables
 */
-.submitPost:hover, #resourceTag:hover, #questionTag:hover, .post_actions:hover, li:hover, #ribbon>div:hover{
+.li:hover, #ribbon>div:hover{
 	background-color:rgba(255,255,255,.75);
+	cursor:pointer;
+}
+.question:hover, .resource:hover, .submitPost:hover, #resourceTag:hover, #questionTag:hover{
+	opacity:.75;
 	cursor:pointer;
 }
 #onlineTA{
