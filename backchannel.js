@@ -74,7 +74,7 @@
 				text:"This area has not yet been implemented, sorry. This filter set is geared toward inter-lecture experience, and would offer students the chance to check on, for example, resources from throughout the quarter. For the Capstone event, the demo is focused on the single-lecture experience." 
 			});
 			$("#ribbon").append(notYet);
-			$("#unfinishedInfo").fadeIn(100).delay(20000).fadeOut(1000,function(e){$("#unfinishedInfo").detach();});
+			$("#unfinishedInfo").fadeIn(100).delay(10000).fadeOut(1000,function(e){$("#unfinishedInfo").detach();});
 		});
 		
 	}
@@ -239,7 +239,9 @@
 			});
 		});
 		
-		socket.on("startChat", function(chatid,name){
+		socket.on("startChat", startChat);
+		
+		function startChat(chatid,name){
 			if($("#chat_"+chatid)[0]){
 				$("#chat_"+chatid+" .chatBody").show();
 				$("#chat_"+chatid+" .chatInput").show();
@@ -251,6 +253,10 @@
 					id:"chat_"+chatid,
 					class:"activeChat",				
 				});
+				var displayname = name;
+				if(name.length>10){
+					displayname=name.substr(0,10)+"...";
+				}
 				var chatHead = $("<div>", {
 					class:"chatHead",
 					click:function(e){
@@ -259,7 +265,7 @@
 						$("#chat_"+chatid).toggleClass('activeChat');
 						$("#chat_"+chatid).toggleClass('inactiveChat');
 					},
-					text:name			
+					text:displayname			
 				});			
 				var closeChat = $("<div>", {
 					class:"closeChat",
@@ -287,18 +293,26 @@
 				chatElement.append(chatInput);
 				$('#chat').append(chatElement);		
 			}
-		});
+		}
 		
 		socket.on("chatPost", function(msg,chatid,name){
+			if(!$('#chat_'+chatid+' .chatBody')[0]){
+				startChat(chatid,name);
+			}
 			postToChat('Post',msg,chatid,screenname);
 		});
 		
 		socket.on("chatReply", function(msg,chatid,name){
+			if(!$('#chat_'+chatid+' .chatBody')[0]){
+				startChat(chatid,name);
+			}
 			postToChat('Reply',msg,chatid,name);
 		});
 		
 		function postToChat(chatType, msg, chatid, name){
-			
+			if(name.length>10){
+				name=name.substr(0,10)+"...";
+			}
 			var chatMessage = $("<div>", {
 				class:"chat"+chatType,
 			});
@@ -310,7 +324,7 @@
 				class:"chatText",
 				html:msg
 			});
-			if($('#chat_'+chatid+' .chatBody').first().children()[0].classList[0]!="chat"+chatType){
+			if((!($('#chat_'+chatid+' .chatBody').first().children()[0])||($('#chat_'+chatid+' .chatBody').first().children().last()[0].classList[0]!="chat"+chatType))){
 				chatMessage.append(chatName);
 			}
 				chatMessage.append(chatText);
