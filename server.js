@@ -74,7 +74,24 @@ io.sockets.on('connection', function(socket){
         io.sockets.emit("reply", newReply);
 		
     });	
+
+	socket.on("openChat", function(chatid){
+		var destination = io.sockets.sockets[chatid];
+		if(destination && (destination != socket)){
+			destination.emit("startChat",socket.id,users[socket.id]);
+			socket.emit("startChat",chatid,users[chatid]);
+		}
+    });		
 	
+	socket.on("sendChat", function(msg,chatid){
+		msg = processText(msg);
+		var destination = io.sockets.sockets[chatid];
+		if(destination != socket){
+			destination.emit("chatReply",msg,socket.id,users[socket.id]);
+			socket.emit("chatPost",msg,chatid,users[chatid]);
+		}
+    });		
+		
 	
     socket.on("disconnect", function(){
         io.sockets.emit("update", users[socket.id] + " has left the server.");
@@ -83,13 +100,11 @@ io.sockets.on('connection', function(socket){
     });
 	
 	function processText(messageText){
-		console.log(messageText);
 		messageText = messageText.replace(/\'/g,"&#39;");
 		messageText = messageText.replace(/\"/g,"&#34;");
 		messageText = messageText.replace(/</g,"&#60;");
 		messageText = messageText.replace(/>/g,"&#62;");
 		var	processedText = messageText.replace(/((((https?:\/\/)?(www\.))|((https?:\/\/)(www\.)?))[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/, '<a class="messageLink" target="_blank" href="$1">$1</a>');
-		console.log(processedText);
 		return processedText;
 	}
 });

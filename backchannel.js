@@ -1,6 +1,7 @@
 "use strict";
 (function()
 {
+	var screenname = "";
 	$(document).ready(function(){
 		ServerSpace();
 		UISpace();
@@ -66,7 +67,16 @@
 				$('form[name=makeNewPost]').submit();
 			}
 		});
-				
+		
+		$("#ribbon").click(function(e){
+			var notYet = $("<div>", {
+				id:"unfinishedInfo",
+				text:"This area has not yet been implemented, sorry. This filter set is geared toward inter-lecture experience, and would offer students the chance to check on, for example, resources from throughout the quarter. For the Capstone event, the demo is focused on the single-lecture experience." 
+			});
+			$("#ribbon").append(notYet);
+			$("#unfinishedInfo").fadeIn(100).delay(20000).fadeOut(1000,function(e){$("#unfinishedInfo").detach();});
+		});
+		
 	}
 
 	//anything that involves communication with the server
@@ -194,15 +204,20 @@
 		
 		//login actions, removes welcome page and reveals backchannel
 		$("#username").keyup(function(e){
-			if(e.which == 13) {
-				$("#filter").css('position','absolute');
-				var name = $("#username").val();
-				if (name != "") {
+			if ($("#username").val() != "") {
+				if(e.which == 13) {
+					$("#filter").css('position','absolute');
+					screenname = $("#username").val();
 					$("#backchannel").html('');
-					socket.emit("join", name);
+					socket.emit("join", screenname);
 					$("#login").fadeOut(250,function(){
 						$("#login").detach();
 					});
+					var welcomeMessage = $("<div>", {
+						id:"welcomeMessage",
+						text:"Welcome, "+screenname
+					});
+					$("#infoheader").append(welcomeMessage);
 					$("#content").show();
 					$("#postArea").focus();
 				}
@@ -213,9 +228,94 @@
 		socket.on("update-users", function(currentUsers){
 			$("#onlineUsers").empty();
 			$.each(currentUsers, function(clientid, name) {
-				var userElement = $("<li>", {id: "user_"+name, text:name});
+				var userElement = $("<li>", {
+					id:"user_"+clientid,
+					text:name,
+					click:function(e){
+						socket.emit("openChat",clientid);
+					}
+				});
 				$('#onlineUsers').append(userElement);
 			});
 		});
+		
+		socket.on("startChat", function(chatid,name){
+			if($("#chat_"+chatid)[0]){
+				$("#chat_"+chatid+" .chatBody").show();
+				$("#chat_"+chatid+" .chatInput").show();
+				$("#chat_"+chatid).removeClass('inactiveChat')
+				$("#chat_"+chatid).removeClass('activeChat')
+				$("#chat_"+chatid).addClass('activeChat')
+			}else{
+				var chatElement = $("<div>", {
+					id:"chat_"+chatid,
+					class:"activeChat",				
+				});
+				var chatHead = $("<div>", {
+					class:"chatHead",
+					click:function(e){
+						$("#chat_"+chatid+" .chatBody").toggle();
+						$("#chat_"+chatid+" .chatInput").toggle();
+						$("#chat_"+chatid).toggleClass('activeChat');
+						$("#chat_"+chatid).toggleClass('inactiveChat');
+					},
+					text:name			
+				});			
+				var closeChat = $("<div>", {
+					class:"closeChat",
+					text:"X",
+					click:function(e){
+						$("#chat_"+chatid).detach();
+					}
+				}); 
+				var chatBody = $("<div>", {
+					class:"chatBody"
+				});
+				var chatInput = $("<textarea>", {
+					class:"chatInput",
+					keypress: function(e){
+						if(e.which == 13 && !e.shiftKey){
+							e.preventDefault();
+							socket.emit("sendChat",$(this).val(),chatid);
+							$(this).val('');
+						}
+					}
+				});
+				chatHead.append(closeChat);
+				chatElement.append(chatHead);
+				chatElement.append(chatBody);
+				chatElement.append(chatInput);
+				$('#chat').append(chatElement);		
+			}
+		});
+		
+		socket.on("chatPost", function(msg,chatid,name){
+			postToChat('Post',msg,chatid,screenname);
+		});
+		
+		socket.on("chatReply", function(msg,chatid,name){
+			postToChat('Reply',msg,chatid,name);
+		});
+		
+		function postToChat(chatType, msg, chatid, name){
+			
+			var chatMessage = $("<div>", {
+				class:"chat"+chatType,
+			});
+			var chatName = $("<span>", {
+				class:"chatName",
+				text:name			
+			});			
+			var chatText = $("<span>", {
+				class:"chatText",
+				html:msg
+			});
+			if($('#chat_'+chatid+' .chatBody').first().children()[0].classList[0]!="chat"+chatType){
+				chatMessage.append(chatName);
+			}
+				chatMessage.append(chatText);
+			$('#chat_'+chatid+' .chatBody').first().append(chatMessage);
+			$('#chat_'+chatid+' .chatBody').animate({ scrollTop: $('#chat_'+chatid+' .chatBody')[0].scrollHeight}, 0);
+		}
 	}
 })();
